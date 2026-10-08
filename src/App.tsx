@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 
 type Side = "BUY" | "SELL";
 type View = "home" | "journal" | "calendar" | "analytics" | "settings";
@@ -97,7 +97,6 @@ function CalendarView({trades,onSelect}:{trades:Trade[];onSelect:(k:string)=>voi
   const first=new Date(y,m,1), last=new Date(y,m+1,0);
   const start=(first.getDay()+6)%7;
   const total=last.getDate();
-  const map=Object.fromEntries(trades.map(()=>[]));
   const byDay:Record<string,{pnl:number;count:number}>={};
   trades.forEach(t=>{const k=dayKey(t.closedAt); byDay[k]??={pnl:0,count:0}; byDay[k].pnl+=t.pnl-t.fees; byDay[k].count+=1});
   const monthTrades=trades.filter(t=>new Date(t.closedAt).getMonth()===m&&new Date(t.closedAt).getFullYear()===y);
@@ -105,7 +104,7 @@ function CalendarView({trades,onSelect}:{trades:Trade[];onSelect:(k:string)=>voi
   const negatives=Object.values(byDay).filter(x=>x.pnl<0).map(x=>x.pnl);
   const best=Math.max(0,...Object.values(byDay).map(x=>x.pnl));
   const worst=negatives.length?Math.min(...negatives):null;
-  const cells:Array<JSX.Element>=[];
+  const cells:Array<ReactNode>=[];
   for(let i=0;i<start;i++)cells.push(<div key={"e"+i} className="cal-cell muted"/>);
   for(let d=1;d<=total;d++){const k=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;const v=byDay[k]; cells.push(<button className={`cal-cell ${v?(v.pnl>=0?"positive":"negative"):""}`} key={k} onClick={()=>onSelect(k)}><span>{d}</span>{v&&<><strong>{fmtCompact(v.pnl)}</strong><small>{v.count} trade{v.count>1?"s":""}</small></>}</button>)}
   return <div className="calendar-layout">
