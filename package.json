@@ -1,0 +1,9 @@
+{
+  "name":"eliass-app",
+  "private":true,
+  "version":"1.0.0",
+  "type":"module",
+  "scripts":{"dev":"vite","build":"tsc && vite build","preview":"vite preview"},
+  "dependencies":{"@netlify/identity":"^2.0.0","@netlify/functions":"^5.0.0","@netlify/database":"latest","@netlify/blobs":"latest","react":"^19.1.0","react-dom":"^19.1.0","vite":"^7.1.0","typescript":"^5.8.0"},
+  "devDependencies":{}
+}
